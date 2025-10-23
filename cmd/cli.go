@@ -8,6 +8,7 @@ import (
 
 	"atomicgo.dev/keyboard"
 	"atomicgo.dev/keyboard/keys"
+	"github.com/mbndr/figlet4go"
 )
 
 type VaultMenuState int
@@ -24,6 +25,7 @@ func RenderMenu(index int) {
 	vault := items.LoadVaultFromFile()
 
 	console.Clear()
+	title()
 	for itemIndex, item := range vault {
 		if itemIndex == index {
 			fmt.Printf(console.Blue+"➡ "+console.Reset+"%v\n", item.Name)
@@ -31,6 +33,8 @@ func RenderMenu(index int) {
 			fmt.Println(item.Name)
 		}
 	}
+
+	fmt.Println()
 
 	// fmt.Println("E - edit || R - Remove || I - Insert || H - History || Q = Quit")
 	fmt.Println(vaultMenuOptions([]string{"Insert", "Remove", "Edit", "History", "Quit"}))
@@ -147,4 +151,14 @@ func vaultMenuOptions(options []string) string {
 	}
 
 	return str
+}
+
+func title() {
+	ascii := figlet4go.NewAsciiRender()
+
+	renderStr, _ := ascii.Render("gTodo")
+	renderStr = console.Blue + renderStr + console.Reset
+	renderStr += "\n" + console.Green + "ver 1.0" + console.Reset + "\n"
+
+	fmt.Println(renderStr)
 }

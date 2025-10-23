@@ -1,0 +1,3 @@
+[submodule "external/figlet"]
+	path = external/figlet
+	url = https://github.com/cmatsuoka/figlet.git
