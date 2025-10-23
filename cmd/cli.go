@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"todo/internal/items"
-	system "todo/internal/items/console"
+	"todo/internal/items/console"
 
 	"atomicgo.dev/keyboard"
 	"atomicgo.dev/keyboard/keys"
@@ -23,16 +23,17 @@ const (
 func RenderMenu(index int) {
 	vault := items.LoadVaultFromFile()
 
-	system.Clear()
+	console.Clear()
 	for itemIndex, item := range vault {
 		if itemIndex == index {
-			fmt.Printf("➡ %v\n", item.Name)
+			fmt.Printf(console.Blue+"➡ "+console.Reset+"%v\n", item.Name)
 		} else {
 			fmt.Println(item.Name)
 		}
 	}
 
-	fmt.Println("E - edit || R - Remove || I - Insert || H - History || Q = Quit")
+	// fmt.Println("E - edit || R - Remove || I - Insert || H - History || Q = Quit")
+	fmt.Println(vaultMenuOptions([]string{"Insert", "Remove", "Edit", "History", "Quit"}))
 
 	vaultState := VaultMenuNone
 
@@ -48,7 +49,7 @@ func RenderMenu(index int) {
 
 			return true, nil
 		} else if key.String() == "q" || key.Code == keys.CtrlC {
-			system.Clear()
+			console.Clear()
 			os.Exit(0)
 		} else if key.String() == "i" {
 			vaultState = VaultMenuInsert
@@ -88,7 +89,7 @@ func vaultIndexCorrection(index *int, vault []items.Item) {
 }
 
 func insertItemMenu() {
-	system.Clear()
+	console.Clear()
 	var data string
 
 	fmt.Print("Item Name: ")
@@ -104,7 +105,7 @@ func insertItemMenu() {
 func editItemMenu(index int) {
 	vault := items.LoadVaultFromFile()
 
-	system.Clear()
+	console.Clear()
 	fmt.Print("Editing item: ")
 
 	originalItemName := vault[index].Name
@@ -130,4 +131,20 @@ func itemHistory(item items.Item) {
 	for i, val := range item.History {
 		fmt.Printf("%d. %v\n", i, val)
 	}
+}
+
+// fmt.Println("E - edit || R - Remove || I - Insert || H - History || Q = Quit")
+// Creates a string of the vault menu options
+func vaultMenuOptions(options []string) string {
+	str := ""
+
+	for i, option := range options {
+		firstLetter := console.Blue + string(option[0]) + console.Reset
+		str += firstLetter + option[1:]
+		if i != len(options)-1 {
+			str += " || "
+		}
+	}
+
+	return str
 }
