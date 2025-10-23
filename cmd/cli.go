@@ -2,24 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
-	"runtime"
 	"todo/internal/items"
+	system "todo/internal/items/console"
 
 	"atomicgo.dev/keyboard"
 	"atomicgo.dev/keyboard/keys"
 )
-
-func clearCli() {
-	switch runtime.GOOS {
-	case "windows":
-		log.Fatal("This program doesn't currently work on Windows ATM")
-	default:
-		fmt.Println("\033[2J")
-		fmt.Print("\033[H")
-	}
-}
 
 type VaultMenuState int
 
@@ -34,10 +23,10 @@ const (
 func RenderMenu(index int) {
 	vault := items.LoadVaultFromFile()
 
-	clearCli()
+	system.Clear()
 	for itemIndex, item := range vault {
 		if itemIndex == index {
-			fmt.Printf(">> %v\n", item.Name)
+			fmt.Printf("➡ %v\n", item.Name)
 		} else {
 			fmt.Println(item.Name)
 		}
@@ -59,7 +48,7 @@ func RenderMenu(index int) {
 
 			return true, nil
 		} else if key.String() == "q" || key.Code == keys.CtrlC {
-			clearCli()
+			system.Clear()
 			os.Exit(0)
 		} else if key.String() == "i" {
 			vaultState = VaultMenuInsert
@@ -99,7 +88,7 @@ func vaultIndexCorrection(index *int, vault []items.Item) {
 }
 
 func insertItemMenu() {
-	clearCli()
+	system.Clear()
 	var data string
 
 	fmt.Print("Item Name: ")
@@ -115,7 +104,7 @@ func insertItemMenu() {
 func editItemMenu(index int) {
 	vault := items.LoadVaultFromFile()
 
-	clearCli()
+	system.Clear()
 	fmt.Print("Editing item: ")
 
 	originalItemName := vault[index].Name
